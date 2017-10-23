@@ -23,7 +23,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 ### API Usage
 
 #### Database Schema
-![alt text](https://imgur.com/a/iMkwM)
+
+![Imgur](https://i.imgur.com/YDvpGiv.png "Database Schema")
 
 #### Input
 
