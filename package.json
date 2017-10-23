@@ -1,0 +1,19 @@
+{
+  "name": "hrsf81-thesis",
+  "version": "1.0.0",
+  "description": "Tinder Clone",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanchen7/hrsf81-thesis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evanchen7/hrsf81-thesis/issues"
+  },
+  "homepage": "https://github.com/evanchen7/hrsf81-thesis#readme"
+}
