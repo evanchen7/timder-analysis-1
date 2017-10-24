@@ -22,7 +22,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Database Schema
 
-![Imgur](https://i.imgur.com/viFiDgq.png "Timder Analsos Database Schema")
+![Imgur](https://i.imgur.com/nzuVRax.png "Timder Analysis Database Schema")
 
 ### API Usage
 
