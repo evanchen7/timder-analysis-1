@@ -37,6 +37,7 @@ const Users = db.define('users', {
 const userSwipes = db.define('userSwipes', {
   eventId: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
     field: 'event_id'
   },

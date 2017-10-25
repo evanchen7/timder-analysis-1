@@ -1,5 +1,7 @@
 'use strict';
 const models = require('../models/index.js');
+const Promise = require('bluebird');
+const axios = require('axios');
 
 var gender = () => {
   var genderArray = ['M', 'F'];
@@ -16,29 +18,35 @@ var photoCount = () => {
   return photoCountArray[Math.floor(Math.random() * 4)];
 };
 
+var randomGenerator = (arr) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
 var generateUser = (num) => {
   var userPromises = [];
   for (var i = 1; i < num; i++) {
-    var newPromise = models.Users.create({
+    var newPromise = {
       userId: i,
       gender: gender(),
       location: locations(),
       photoCount: photoCount()
-    });
+    };
     userPromises.push(newPromise);
   }
 
-  return Promise.all(userPromises).then((users) => {
-    console.log(users);
-  }).catch((err) => {
-    throw err;
-  });
+   Promise.map(userPromises, (prom) => {
+    return models.Users.create(prom);
+   }, {concurrency: 10}).then(() => {
+    console.log('Done');
+   }).catch((err) => {
+    console.log('Error ', err);
+   });
 };
 
 var generateInitialWeights = (num) => {
   var weightPromises = [];
   for (var i = 1; i < num; i++){
-    var newPromise = models.UserWeights.create({
+    var newPromise = {
       userId: i,
       photoCountWeight: {
         0: 0,
@@ -46,18 +54,30 @@ var generateInitialWeights = (num) => {
         2: 0,
         3: 0
       }
-    });
+    };
     weightPromises.push(newPromise);
   }
 
-  return Promise.all(weightPromises).then((users) => {
-    console.log(users);
+  Promise.map(weightPromises, (prom) => {
+   return models.UserWeights.create(prom);
+  }, {concurrency: 10}).then(() => {
+   console.log('Done');
   }).catch((err) => {
-    throw err;
+   console.log('Error ', err);
   });
+};
+
+var generateMatchEvents = (num) => {
+  return {
+    userId: Math.floor(Math.random() * num),
+    swipeId: Math.floor(Math.random() * num),
+    swipe: [true, false][Math.floor(Math.random() * 2)],
+    timestamp: Date.now()
+  };
 };
 
 module.exports = {
   generateUser: generateUser,
-  generateInitialWeights: generateInitialWeights
+  generateInitialWeights: generateInitialWeights,
+  generateMatchEvents: generateMatchEvents
 };

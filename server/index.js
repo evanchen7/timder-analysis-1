@@ -12,48 +12,38 @@ app.get('/', function (req, res) {
   res.send('Hello World');
 });
 
-app.post('/fakedata', (req, res) => {
-  // return generateUser.generateUser(100)
-  // .then(() => {
-  //   generateUser.generateInitialWeights(100)
-  // .then((something) => {
-  //   res.json(something);
-  //   });
-  // }).catch((err) => {
-  //   throw err;
-  // });
-  return generateUser.generateUser(131).then(() => {
-    res.end()
-  }).catch((err) => {console.log(err); return;});
-
+app.post('/dropDb', (req, res) => {
+  db.Users.sync({force: true})
+    .then(() => {
+       return db.UserWeights.sync({force: true})
+    .then(() => {
+       return db.userSwipes.sync({force: true});})
+    .catch((err) => {
+       throw err;
+     });
+  });
 });
 
-// app.post('/fakedata', (req, res) => {
-//   generateUser.generateUser(100).then((something) => {
-//     res.json(something);
-//   }).catch((err) => { throw err; });
-//
-// });
-
-app.post('/dropdb', (req, res) => {
+app.post('/addData', (req, res) => {
   // return db.Users.destroy({truncate: true});
    db.Users.sync({force: true})
     .then(() => {
       return db.UserWeights.sync({force: true})
     .then(() => {
-      return db.userSwipes.sync({force: true});
-    }).then(() => {
-      return generateUser.generateUser(131);
-    }).then(() => {
-      return generateUser.generateInitialWeights(131);
-    });
-    })
-
+      return db.userSwipes.sync({force: true});})
+    .then(() => {
+      return generateUser.generateUser(100000);})
+    .then(() => {
+      return generateUser.generateInitialWeights(100000); }); })
     .catch((err) => {
       throw err;
     });
   res.end();
 
+});
+
+app.post('/nandapost', () => {
+  
 });
 
 app.listen(PORT, () => {

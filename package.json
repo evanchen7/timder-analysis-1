@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/evanchen7/hrsf81-thesis#readme",
   "dependencies": {
+    "axios": "^0.17.0",
+    "bluebird": "^3.5.1",
     "elasticsearch": "^13.3.1",
     "express": "^4.16.2",
     "faker": "^4.1.0",
