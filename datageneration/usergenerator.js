@@ -3,6 +3,8 @@ const models = require('../models/index.js');
 const Promise = require('bluebird');
 const axios = require('axios');
 
+var count = 0;
+
 var gender = () => {
   var genderArray = ['M', 'F'];
   return genderArray[Math.floor(Math.random() * 2)];
@@ -67,17 +69,49 @@ var generateInitialWeights = (num) => {
   });
 };
 
-var generateMatchEvents = (num) => {
-  return {
-    userId: Math.floor(Math.random() * num),
-    swipeId: Math.floor(Math.random() * num),
+// var generateMatchEvents = (num) => {
+//   return {
+//     userId: Math.floor(Math.random() * num),
+//     swipeId: Math.floor(Math.random() * num),
+//     swipe: [true, false][Math.floor(Math.random() * 2)],
+//     timestamp: Date.now()
+//   };
+// };
+
+var insertMatchEvents = () => {
+  var data = {
+    userId: Math.floor(Math.random() * 100000),
+    swipeId: Math.floor(Math.random() * 100000),
     swipe: [true, false][Math.floor(Math.random() * 2)],
     timestamp: Date.now()
   };
+
+  count++;
+
+  axios.post('/nandapost', {data})
+  .then(() => {
+
+  }).catch((err) => {
+    throw err;
+  });
+};
+
+var simulateMatchData = () => {
+  for (var i = count; i < 100000; i++) {
+    setTimeout(()=>{
+      simulateMatchData();
+    }, 100);
+  }
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
 };
 
 module.exports = {
   generateUser: generateUser,
   generateInitialWeights: generateInitialWeights,
-  generateMatchEvents: generateMatchEvents
+  insertMatchEvents: insertMatchEvents,
+  simulateMatchData: simulateMatchData
 };
+
+simulateMatchData();
