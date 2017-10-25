@@ -4,11 +4,15 @@ const Sequelize = require('sequelize');
 const SequelizeConfig = require('./config.js');
 let db = new Sequelize(SequelizeConfig.connection);
 
-const Users = Sequelize.define('users', {
+const Users = db.define('users', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    field: 'id'
+  },
   userId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
     field: 'user_id'
   },
   gender: {
@@ -30,75 +34,63 @@ const Users = Sequelize.define('users', {
   tableName: 'users'
 });
 
-const userSwipes = Sequelize.define('userSwipes', {
+const userSwipes = db.define('userSwipes', {
   eventId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
     primaryKey: true,
     field: 'event_id'
   },
   userId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'user_id'
-    },
     field: 'user_id'
   },
   swipedId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
     field: 'swiped_id'
   },
   swipe: {
     type: Sequelize.BOOLEAN,
-    allowNull: false,
     field: 'swipe'
   },
   timestamp: {
     type: Sequelize.TIME,
-    allowNull: false,
     field: 'timestamp'
-  },
-  usersUserId: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    field: 'users_user_id'
   }
 }, {
   tableName: 'user_swipes'
 });
 
-const UserWeights = Sequelize.define('userWeights', {
+const UserWeights = db.define('userWeights', {
   weightId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
     primaryKey: true,
-    field: 'weight_id'
+    field: 'weight_id',
+    autoIncrement: true
   },
   userId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'user_id'
-    },
     field: 'user_id'
   },
   photoCountWeight: {
     type: Sequelize.JSON,
-    allowNull: false,
     field: 'photo_count_weight'
   },
   createdAt: {
     type: Sequelize.DATE,
-    allowNull: false,
     field: 'created_at'
   }
 }, {
   tableName: 'user_weights'
 });
+
+//Relations between Users and UserWeights
+//Users.hasMany(UserWeights);
+//UserWeights.belongsTo(Users, {foreignKey: 'fk_user_id'});
+
+//Relations between Users and userSwipes
+//Users.hasMany(userSwipes);
+//userSwipes.belongsTo(Users);
+
 
 module.exports = {
   Sequelize: Sequelize,
