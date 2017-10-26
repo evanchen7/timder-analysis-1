@@ -44,7 +44,7 @@ var generateUser = (num) => {
     userPromises.push(newPromise);
   }
 
-   Promise.map(userPromises, (prom) => {
+   return Promise.map(userPromises, (prom) => {
     return models.Users.create(prom);
    }, {concurrency: 10}).then(() => {
     console.log('Done');
@@ -67,7 +67,7 @@ var generateInitialWeights = (num) => {
     };
     weightPromises.push(newPromise);
   }
-  Promise.map(weightPromises, (prom) => {
+  return Promise.map(weightPromises, (prom) => {
    return models.UserWeights.create(prom);
   }, {concurrency: 10}).then(() => {
    console.log('Done');
@@ -77,10 +77,10 @@ var generateInitialWeights = (num) => {
 };
 
 var generateRandomWeights = (num) => {
-  var weightPromises = [];
-  var randWeights = randomWeight();
+  var randomWeightPromises = [];
   for (var i = 1; i < num; i++){
-    var newPromise = {
+    var randWeights = randomWeight();
+    var newPromise1 = {
       userId: Math.floor(Math.random() * 100000),
       photoCountWeight: {
         0: randWeights[0],
@@ -89,9 +89,11 @@ var generateRandomWeights = (num) => {
         3: randWeights[3]
       }
     };
-    weightPromises.push(newPromise);
+    console.log(i);
+    randomWeightPromises.push(newPromise1);
   }
-  Promise.map(weightPromises, (prom) => {
+
+  return Promise.map(randomWeightPromises, (prom) => {
    return models.UserWeights.create(prom);
   }, {concurrency: 10}).then(() => {
    console.log('Done');

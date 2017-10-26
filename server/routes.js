@@ -56,6 +56,21 @@ routes.post('/addData', (req, res) => {
   res.end();
 });
 
+routes.post('/addData1', (req, res) => {
+
+  return db.UserWeights.sync({force: true})
+  .then(()=>{
+    return fakeData.generateRandomWeights(1000000);
+  })
+  .then(()=>{
+    res.end();
+  })
+  .catch((err) => {
+    throw err;
+  });
+
+});
+
 routes.post('/nandapost', (req, res) => {
   var currentTime = new Date();
   db.userSwipes.create({
