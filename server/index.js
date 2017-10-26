@@ -48,7 +48,7 @@ app.post('/nandapost', (req, res) => {
    swipe: req.body.swipe,
    timestamp: req.body.timestamp
   }).then(() => {
-    console.log(currentTime.toISOString());
+    //console.log(currentTime.toISOString());
   }).catch((err) => {
     throw err;
   });

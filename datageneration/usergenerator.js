@@ -2,7 +2,6 @@
 const models = require('../models/index.js');
 const Promise = require('bluebird');
 const axios = require('axios');
-
 var count = 0;
 
 var gender = () => {
@@ -20,9 +19,9 @@ var photoCount = () => {
   return photoCountArray[Math.floor(Math.random() * 4)];
 };
 
-var randomGenerator = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
+// var randomGenerator = (arr) => {
+//   return arr[Math.floor(Math.random() * arr.length)];
+// };
 
 var generateUser = (num) => {
   var userPromises = [];
@@ -78,25 +77,69 @@ var insertMatchEvents = () => {
     timestamp: currentTime.toISOString()
   };
 
-  count++;
+
 
   axios.post('http://localhost:3000/nandapost', data)
-  .then((data) => {
-    console.log(currentTime.toISOString());
+  .then(() => {
+    count++;
+    console.log(currentTime.toISOString(), count);
   }).catch((err) => {
     throw err;
   });
 };
 
 var simulateMatchData = () => {
-   if (count < 1000) {
+   if (count < 500000) {
     setTimeout(()=>{
       simulateMatchData();
-    }, 500);
+    }, 100);
   }
   insertMatchEvents();
   insertMatchEvents();
   insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+  insertMatchEvents();
+
 };
 
 module.exports = {
