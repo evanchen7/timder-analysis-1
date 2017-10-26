@@ -19,9 +19,18 @@ var photoCount = () => {
   return photoCountArray[Math.floor(Math.random() * 4)];
 };
 
-// var randomGenerator = (arr) => {
-//   return arr[Math.floor(Math.random() * arr.length)];
-// };
+var random100 = () => {
+  return Math.round(Math.random() * 100);
+};
+
+var randomWeight = () => {
+ var zero = random100();
+ var one = random100();
+ var two = random100();
+ var three = random100();
+ var total = zero + one + two + three;
+ return [zero/total, one/total, two/total, three/total];
+};
 
 var generateUser = (num) => {
   var userPromises = [];
@@ -58,7 +67,30 @@ var generateInitialWeights = (num) => {
     };
     weightPromises.push(newPromise);
   }
+  Promise.map(weightPromises, (prom) => {
+   return models.UserWeights.create(prom);
+  }, {concurrency: 10}).then(() => {
+   console.log('Done');
+  }).catch((err) => {
+   console.log('Error ', err);
+  });
+};
 
+var generateRandomWeights = (num) => {
+  var weightPromises = [];
+  var randWeights = randomWeight();
+  for (var i = 1; i < num; i++){
+    var newPromise = {
+      userId: Math.floor(Math.random() * 100000),
+      photoCountWeight: {
+        0: randWeights[0],
+        1: randWeights[1],
+        2: randWeights[2],
+        3: randWeights[3]
+      }
+    };
+    weightPromises.push(newPromise);
+  }
   Promise.map(weightPromises, (prom) => {
    return models.UserWeights.create(prom);
   }, {concurrency: 10}).then(() => {
@@ -76,8 +108,6 @@ var insertMatchEvents = () => {
     swipe: [true, false][Math.floor(Math.random() * 2)],
     timestamp: currentTime.toISOString()
   };
-
-
 
   axios.post('http://localhost:3000/nandapost', data)
   .then(() => {
@@ -145,6 +175,7 @@ var simulateMatchData = () => {
 module.exports = {
   generateUser: generateUser,
   generateInitialWeights: generateInitialWeights,
+  generateRandomWeights: generateRandomWeights,
   insertMatchEvents: insertMatchEvents,
   simulateMatchData: simulateMatchData
 };
