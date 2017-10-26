@@ -79,28 +79,30 @@ var generateInitialWeights = (num) => {
 // };
 
 var insertMatchEvents = () => {
+  var currentTime = new Date();
   var data = {
     userId: Math.floor(Math.random() * 100000),
-    swipeId: Math.floor(Math.random() * 100000),
+    swipedId: Math.floor(Math.random() * 100000),
     swipe: [true, false][Math.floor(Math.random() * 2)],
-    timestamp: Date.now()
+    timestamp: currentTime.toISOString()
   };
 
   count++;
 
-  axios.post('/nandapost', {data})
-  .then(() => {
+  axios.post('http://localhost:3000/nandapost', data)
+  .then((data) => {
 
+    console.log(currentTime.toISOString());
   }).catch((err) => {
     throw err;
   });
 };
 
 var simulateMatchData = () => {
-  for (var i = count; i < 100000; i++) {
+   if (count < 1000) {
     setTimeout(()=>{
       simulateMatchData();
-    }, 100);
+    }, 500);
   }
   insertMatchEvents();
   insertMatchEvents();
@@ -114,4 +116,4 @@ module.exports = {
   simulateMatchData: simulateMatchData
 };
 
-simulateMatchData();
+// simulateMatchData();

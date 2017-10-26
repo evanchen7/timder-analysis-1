@@ -54,7 +54,7 @@ const userSwipes = db.define('userSwipes', {
     field: 'swipe'
   },
   timestamp: {
-    type: Sequelize.TIME,
+    type: Sequelize.DATE,
     field: 'timestamp'
   }
 }, {
@@ -85,13 +85,12 @@ const UserWeights = db.define('userWeights', {
 });
 
 //Relations between Users and UserWeights
-//Users.hasMany(UserWeights);
-//UserWeights.belongsTo(Users, {foreignKey: 'fk_user_id'});
+// Users.hasMany(UserWeights);
+// UserWeights.belongsTo(Users, {foreignKey: 'fk_user_id'});
 
 //Relations between Users and userSwipes
-//Users.hasMany(userSwipes);
-//userSwipes.belongsTo(Users);
-
+// Users.hasMany(userSwipes);
+// userSwipes.belongsTo(Users);
 
 module.exports = {
   Sequelize: Sequelize,

@@ -10,7 +10,6 @@ const fakeData = require('../datageneration/usergenerator.js');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
 app.post('/dropDb', (req, res) => {
   db.Users.sync({force: true})
     .then(() => {
@@ -21,43 +20,44 @@ app.post('/dropDb', (req, res) => {
        throw err;
      });
   });
+  res.end();
 });
 
 app.post('/addData', (req, res) => {
-  // return db.Users.destroy({truncate: true});
    db.Users.sync({force: true})
     .then(() => {
       return db.UserWeights.sync({force: true})
     .then(() => {
       return db.userSwipes.sync({force: true});})
     .then(() => {
-      return fakeData.generateUser(100000);})
+      return fakeData.generateUser(1000000);})
     .then(() => {
-      return fakeData.generateInitialWeights(100000); }); })
+      return fakeData.generateInitialWeights(1000000); }); })
     .catch((err) => {
       throw err;
     });
   res.end();
-
 });
 
 app.post('/nandapost', (req, res) => {
-  // var data = {
-  //   userId: req.body.userId,
-  //   swipeId: req.body.swipeId,
-  //   swipe: req.body.swipe,
-  //   timestamp: req.body.timestamp
-  // };
-  console.log(req.body)
-  // db.userSwipes.create({data}).then((response) => {
-  //   res.end();
-  // }).catch((err) => {
-  //   throw err;
-  // });
+  var currentTime = new Date();
+
+  db.userSwipes.create({
+   userId: req.body.userId,
+   swipedId: req.body.swipedId,
+   swipe: req.body.swipe,
+   timestamp: req.body.timestamp
+  }).then(() => {
+    console.log(currentTime.toISOString());
+  }).catch((err) => {
+    throw err;
+  });
+
+  res.end();
 });
 
-app.post('/trigger', (req, res) => {
-  fakeData.insertMatchEvents();
+app.post('/start', (req, res) => {
+  fakeData.simulateMatchData();
   res.end();
 });
 
