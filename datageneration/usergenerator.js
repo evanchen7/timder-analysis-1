@@ -95,7 +95,7 @@ var generateRandomWeights = (num) => {
 
   return Promise.map(randomWeightPromises, (prom) => {
    return models.UserWeights.create(prom);
-  }, {concurrency: 10}).then(() => {
+ }, {concurrency: 50}).then(() => {
    console.log('Done');
   }).catch((err) => {
    console.log('Error ', err);

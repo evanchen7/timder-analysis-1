@@ -3,9 +3,9 @@ const routes = require('express').Router();
 const db = require('../models/index.js');
 const fakeData = require('../datageneration/usergenerator.js');
 
-//GET Routes
+// GET Routes
 
-//Find latest photo count weight associated with user
+// Find latest photo count weight associated with user
 routes.get('/api/weights/photo/', (req, res) => {
   if(req.query.id) {
     db.UserWeights.findOne({ where: {userId: req.query.id}, order: [['createdAt', 'DESC']] })
@@ -19,11 +19,20 @@ routes.get('/api/weights/photo/', (req, res) => {
   }
 });
 
-//Find all weights associated with user
-// routes.get('/api/weights/all', (req, res) => {
-//   db.UserWeights
-//   res.json();
-// });
+// Find all weights associated with user
+routes.get('/api/weights/all', (req, res, next) => {
+  if(req.query.id) {
+    db.UserWeights.findAll({ where: {userId: req.query.id}})
+    .then((user) => {
+      res.json(user);
+    }).catch((err) => {
+      console.log(err);
+      next();
+    });
+  } else {
+    res.sendStatus(204);
+  }
+});
 
 
 //POST Routes
@@ -57,7 +66,6 @@ routes.post('/addData', (req, res) => {
 });
 
 routes.post('/addData1', (req, res) => {
-
   return db.UserWeights.sync({force: true})
   .then(()=>{
     return fakeData.generateRandomWeights(1000000);
@@ -72,14 +80,13 @@ routes.post('/addData1', (req, res) => {
 });
 
 routes.post('/nandapost', (req, res) => {
-  var currentTime = new Date();
   db.userSwipes.create({
    userId: req.body.userId,
    swipedId: req.body.swipedId,
    swipe: req.body.swipe,
    timestamp: req.body.timestamp
   }).then(() => {
-    //console.log(currentTime.toISOString());
+
   }).catch((err) => {
     throw err;
   });
