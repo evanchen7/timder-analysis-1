@@ -40,6 +40,20 @@ routes.get('/api/weights/all', (req, res, next) => {
   }
 });
 
+routes.get('/api/weightshistory/all', (req, res, next) => {
+  if(req.query.id) {
+    db.UserWeights.findAll({ where: {userId: req.query.id}})
+    .then((user) => {
+      res.json(user);
+    }).catch((err) => {
+      console.log(err);
+      next();
+    });
+  } else {
+    res.sendStatus(204);
+  }
+});
+
 
 //POST Routes
 routes.post('/dropDb', (req, res) => {
