@@ -28,8 +28,9 @@ var randomWeight = () => {
  var one = random100();
  var two = random100();
  var three = random100();
- var total = zero + one + two + three;
- return [zero/total, one/total, two/total, three/total];
+ var four = random100();
+ var total = zero + one + two + three + four;
+ return [zero/total, one/total, two/total, three/total, four/total, total];
 };
 
 var generateUser = (num) => {
@@ -58,12 +59,7 @@ var generateInitialWeights = (num) => {
   for (var i = 1; i < num; i++){
     var newPromise = {
       userId: i,
-      photoCountWeight: {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0
-      }
+      photoCountWeight: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, total: 0 }
     };
     weightPromises.push(newPromise);
   }

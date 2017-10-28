@@ -2,17 +2,23 @@
 const routes = require('express').Router();
 const db = require('../models/index.js');
 const fakeData = require('../datageneration/usergenerator.js');
+const analysis = require('../analysis/weightcalculations.js');
 
 // GET Routes
 
+routes.get('/getEventSwipes',  (req, res, next) => {
+  //grab swipes from event service
+});
+
 // Find latest photo count weight associated with user
-routes.get('/api/weights/photo/', (req, res) => {
+routes.get('/api/weights/photo/', (req, res, next) => {
   if(req.query.id) {
     db.UserWeights.findOne({ where: {userId: req.query.id}, order: [['createdAt', 'DESC']] })
     .then((user) => {
       res.json(user);
     }).catch((err) => {
       console.log(err);
+      next();
     });
   } else {
     res.sendStatus(204);
