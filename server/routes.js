@@ -6,7 +6,7 @@ const analysis = require('../analysis/weightcalculations.js');
 
 // GET Routes
 
-routes.get('/getEventSwipes',  (req, res, next) => {
+routes.get('/getEventSwipes', (req, res, next) => {
   //grab swipes from event service
 });
 
@@ -40,9 +40,10 @@ routes.get('/api/weights/all', (req, res, next) => {
   }
 });
 
+// Find weight history of specific user
 routes.get('/api/weightshistory/all', (req, res, next) => {
   if(req.query.id) {
-    db.UserWeights.findAll({ where: {userId: req.query.id}})
+    db.UserWeightsHistory.findAll({ where: {userId: req.query.id}})
     .then((user) => {
       res.json(user);
     }).catch((err) => {
@@ -56,32 +57,52 @@ routes.get('/api/weightshistory/all', (req, res, next) => {
 
 
 //POST Routes
-routes.post('/dropDb', (req, res) => {
-  db.Users.sync({force: true})
-    .then(() => {
-       return db.UserWeights.sync({force: true})
-    .then(() => {
-       return db.userSwipes.sync({force: true});})
-    .catch((err) => {
-       throw err;
-     });
+routes.post('/createTables', (req, res) => {
+  var weights = db.UserWeights.sync({force: true});
+  var weightsHistory = db.UserWeightsHistory.sync({force: true});
+
+
+  return Promise.all([weights, weightsHistory]).then((results) => {
+    console.log('Tables Created', results);
+  }).then(() => {
+    fakeData.generateInitialWeights(100000)
+  })
+  .catch((err) => {
+    console.log(err);
+    res.end();
   });
-  res.end();
 });
 
-routes.post('/addData', (req, res) => {
-   db.Users.sync({force: true})
-    .then(() => {
-      return db.UserWeights.sync({force: true})
-    .then(() => {
-      return db.userSwipes.sync({force: true});})
-    .then(() => {
-      return fakeData.generateUser(1000000);})
-    .then(() => {
-      return fakeData.generateInitialWeights(1000000); }); })
-    .catch((err) => {
-      throw err;
-    });
+// routes.post('/addData', (req, res) => {
+//    db.Users.sync({force: true})
+//     .then(() => {
+//       return db.UserWeights.sync({force: true})
+//     .then(() => {
+//       return db.userSwipes.sync({force: true});})
+//     .then(() => {
+//       return fakeData.generateUser(1000000);})
+//     .then(() => {
+//       return fakeData.generateInitialWeights(1000000); }); })
+//     .catch((err) => {
+//       throw err;
+//     });
+//   res.end();
+// });
+
+// GENERATE Fake Data
+routes.post('/addUserData', (req, res) => {
+  //  db.Users.sync({force: true})
+  //   .then(() => {
+  //     fakeData.generateUser(1000000);
+  //     res.end();
+  //   })
+  //   .catch((err) => {
+  //     throw err;
+  //     res.end();
+  //   });
+
+  // fakeData.generateUser(1000000);
+  fakeData.generateInitialWeights(1000000);
   res.end();
 });
 
@@ -100,17 +121,12 @@ routes.post('/addData1', (req, res) => {
 });
 
 routes.post('/nandapost', (req, res) => {
-  db.userSwipes.create({
-   userId: req.body.userId,
-   swipedId: req.body.swipedId,
-   swipe: req.body.swipe,
-   timestamp: req.body.timestamp
-  }).then(() => {
-
-  }).catch((err) => {
-    throw err;
-  });
-  res.end();
+  if (req.body) {
+    analysis.calculatePhotoWeight(req.body);
+    res.end();
+  } else {
+    res.sendStatus(204);
+  }
 });
 
 // Generates fake POST requests

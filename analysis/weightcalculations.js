@@ -11,7 +11,7 @@ var calculateBulkWeights = (start, end) => {
   axios.get('/swipes', end ? { params: { timestamp: start, timestampEnd: end }} :
   { params: { timestamp: start }} )
   .then((swipes) => {
-    swipes.forEach((entry) => {
+    return swipes.map((entry) => {
       results[entry] = [] || results[entry].push(entry);
     });
   }).then(() => {
@@ -28,16 +28,33 @@ var calculatePhotoWeight = (swipe) => {
   var currentTime = new Date();
   var defaultRaw = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, total: 0 };
   var defaultCalculated = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+  console.log(swipe)
 
-  if (swipeCheck) {
+  models.Users.findById(compareId).then((results) => {
+    console.log(results);
+  })
+
+  if (swipeCheck && currentId === compareId) {
     var currentIdWeights = models.UserWeights.findOrCreate({
       where:{ userId: currentId },
-      defaults: { rawPhotoCount: defaultRaw, photoCountWeight: defaultCalculated }
-    });
-    var swiped = models.Users.findById(compareId);
+      defaults: { rawPhotoCount: defaultRaw, photoCountWeight: defaultCalculated, createdAt: currentTime.toISOString() }
+    })
+    // .catch((err) => { throw err; });
 
-    Promise.all([currentIdWeights, swiped]).spread((newCurrentIdWeights, swipeResult) => {
+    var swiped = models.Users.findById(compareId).then((results) => {
+      console.log(results);
+    })
+    // .catch((err) => {
+    //   throw err
+    // });
+
+    Promise.all([currentIdWeights, swiped]).spread((curr, swipe) => {
+      console.log(curr)
+      console.log(swipe)
+      var newCurrentIdWeights = results[0];
+      var swipeResult = results[1];
       var swipeCount = swipeResult.photoCount;
+
 
       // Updates the rawPhotoCount property
       var newRawPhotoCount = newCurrentIdWeights.rawPhotoCount;
@@ -64,12 +81,13 @@ var calculatePhotoWeight = (swipe) => {
           photoCountWeight: newPhoto,
           createdAt: currentTime.toISOString()
         });
+
       });
     }).catch((err) => {
       console.log(err);
     });
   } else {
-    return false;
+    console.log(swipeCheck)
   }
 };
 
