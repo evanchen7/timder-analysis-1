@@ -3,6 +3,7 @@ const routes = require('express').Router();
 const db = require('../models/index.js');
 const fakeData = require('../datageneration/usergenerator.js');
 const analysis = require('../analysis/weightcalculations.js');
+const pgAnalysis = require('../analysis/pgpromiseweight.js');
 
 // GET Routes
 
@@ -73,21 +74,11 @@ routes.post('/createTables', (req, res) => {
   });
 });
 
-// routes.post('/addData', (req, res) => {
-//    db.Users.sync({force: true})
-//     .then(() => {
-//       return db.UserWeights.sync({force: true})
-//     .then(() => {
-//       return db.userSwipes.sync({force: true});})
-//     .then(() => {
-//       return fakeData.generateUser(1000000);})
-//     .then(() => {
-//       return fakeData.generateInitialWeights(1000000); }); })
-//     .catch((err) => {
-//       throw err;
-//     });
-//   res.end();
-// });
+routes.post('/addWeights', (req, res) => {
+
+  db.UserWeights.sync({force: true});
+  res.end();
+});
 
 // GENERATE Fake Data
 routes.post('/addUserData', (req, res) => {
@@ -122,7 +113,8 @@ routes.post('/addData1', (req, res) => {
 
 routes.post('/nandapost', (req, res) => {
   if (req.body) {
-    analysis.calculatePhotoWeight(req.body);
+    // analysis.calculatePhotoWeight(req.body);
+    pgAnalysis.pgCalculateWeight(req.body);
     res.end();
   } else {
     res.sendStatus(204);

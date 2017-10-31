@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const axios = require('axios');
 var fs = require('fs');
 var stream = fs.createWriteStream("./datageneration/userFile.txt");
-var weights = fs.createWriteStream("./datageneration/weights.csv");
+var weights = fs.createWriteStream("/Users/evanchen/desktop/weights.csv");
 
 
 var count = 0;
@@ -95,67 +95,35 @@ var generateUser = (num) => {
 var generateInitialWeights = (num) => {
   console.log('START-----------------', new Date());
   var currentTime = new Date();
-  var raw = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
-  var count = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
-  // var weightPromises = [];
-  // for (var i = 10000; i < num; i++){
-  //   var newPromise = {
-  //     userId: i,
-  //     rawPhotoCount: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, total: 0 },
-  //     photoCountWeight: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 },
-  //     createdAt: currentTime.toISOString()
-  //   };
-  //   weightPromises.push(newPromise);
-  // }
+  var raw = {
+    '0': 0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    'total': 0
+  };
+  var count = {
+    '0': 0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0
+  };
 
   var results = '';
   for (var i = 0; i < num; i++) {
-    results += i + '|' + i + '|' + JSON.stringify(raw) + '|' + JSON.stringify(count) + '|' + JSON.stringify(currentTime.toISOString()) + '|' + JSON.stringify(currentTime.toISOString()) +'\n';
+    results += i + '|' + i + '|' + JSON.stringify(raw) + '|' + JSON.stringify(count) + '|' + JSON.stringify(currentTime.toISOString()) + '|' + JSON.stringify(currentTime.toISOString()) + '\n';
   }
 
  writeToWeightsFile(results);
-
- //  Promise.map(weightPromises, (prom) => {
- //  console.log(prom.userId)
- //   return models.UserWeights.create(prom);
- // }, {concurrency: 1000}).then(() => {
- //   console.log('Done');
- //  }).catch((err) => {
- //   console.log('Error ', err);
- //  });
 };
-
-// var generateRandomWeights = (num) => {
-//   var randomWeightPromises = [];
-//   for (var i = 1; i < num; i++){
-//     var randWeights = randomWeight();
-//     var newPromise1 = {
-//       userId: Math.floor(Math.random() * 100000),
-//       photoCountWeight: {
-//         0: randWeights[0],
-//         1: randWeights[1],
-//         2: randWeights[2],
-//         3: randWeights[3]
-//       }
-//     };
-//     console.log(i);
-//     randomWeightPromises.push(newPromise1);
-//   }
-//
-//   return Promise.map(randomWeightPromises, (prom) => {
-//    return models.UserWeights.create(prom);
-//  }, {concurrency: 10}).then(() => {
-//    console.log('Done');
-//   }).catch((err) => {
-//    console.log('Error ', err);
-//   });
-// };
 
 var insertMatchEvents = () => {
   var currentTime = new Date();
   var data = {
-    'user_id': Math.floor(Math.random() * 10000),
-    'swiped_id': Math.floor(Math.random() * 10000),
+    'user_id': Math.floor(Math.random() * 1000000),
+    'swiped_id': Math.floor(Math.random() * 1000000),
     swipe: [true, false][Math.floor(Math.random() * 2)],
     timestamp: currentTime.toISOString()
   };
@@ -163,18 +131,19 @@ var insertMatchEvents = () => {
   axios.post('http://localhost:3000/nandapost', data)
   .then(() => {
     count++;
-    console.log(currentTime.toISOString(), count);
   }).catch((err) => {
     throw err;
   });
 };
 
 var simulateMatchData = () => {
-   if (count < 1000) {
+   if (count < 500000) {
     setTimeout(()=>{
       simulateMatchData();
-    }, 1000);
+    }, 100);
   }
+  insertMatchEvents();
+  insertMatchEvents();
   insertMatchEvents();
 
 };
