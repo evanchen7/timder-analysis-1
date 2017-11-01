@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../models/pgindex.js');
 const axios = require('axios');
+const elasticAdd = require('../elastic/document_add.js');
 const pgp = db.$config.pgp;
 const weightsTable = new pgp.helpers.ColumnSet(['?user_id', 'raw_photo_count', 'photo_count_weight'], {table: 'user_weights'});
 const weightsHistoryTable = new pgp.helpers.ColumnSet(['?user_id', 'raw_photo_count', 'photo_count_weight'], {table: 'user_weights_history'});
@@ -17,6 +18,7 @@ var pgCalculateWeight = (swipe) => {
     0: 0, 1: 0, 2: 0, 3: 0, 4: 0
   };
 
+
 // Checks if the current user swipes yes
   if (swipeCheck && currentId !== compareId) {
 
@@ -25,8 +27,8 @@ var pgCalculateWeight = (swipe) => {
       var swipedId = t.one('select * from users where user_id=$1', compareId);
 
       return t.batch([currentWeight, swipedId]).spread((curr, swipe) => {
-        console.log('curr', curr['raw_photo_count']);
-        console.log('swipe', swipe['photo_count']);
+        // console.log('curr', curr['raw_photo_count']);
+        // console.log('swipe', swipe['photo_count']);
         var swipeCount = swipe['photo_count'];
 
         var newRawPhotoCount = curr['raw_photo_count'];
@@ -44,8 +46,10 @@ var pgCalculateWeight = (swipe) => {
         var updateUserWeights = pgp.helpers.update([updatedData], weightsTable);
         var updateUserWeightsHistory = pgp.helpers.insert([updatedData], weightsHistoryTable);
 
+        elasticAdd.addDocuments(currentId, newRawPhotoCount, newPhoto);
+
         t.batch([updateUserWeights, updateUserWeightsHistory]).then((update) => {
-          console.log('UPDATED ', update);
+          // console.log('UPDATED ', update);
         });
       });
     })
