@@ -3,8 +3,8 @@ const models = require('../models/index.js');
 const Promise = require('bluebird');
 const axios = require('axios');
 var fs = require('fs');
-var stream = fs.createWriteStream("./datageneration/userFile.txt");
-var weights = fs.createWriteStream("/Users/evanchen/desktop/weights.csv");
+// var stream = fs.createWriteStream("./datageneration/userFile.txt");
+// var weights = fs.createWriteStream("/Users/evanchen/desktop/weights.csv");
 
 
 var count = 0;
@@ -41,28 +41,28 @@ var randomWeight = () => {
 // TODO ------------------------------------------------------------------
 
 
-var writeToWeightsFile = (data) => {
+// var writeToWeightsFile = (data) => {
+//
+//   weights.write(data, (err) => {
+//     if (err) {
+//       console.log(err.message);
+//     } else {
+//       console.log('END-----------------', new Date());
+//     }
+//   });
+//   weights.end();
+// };
 
-  weights.write(data, (err) => {
-    if (err) {
-      console.log(err.message);
-    } else {
-      console.log('END-----------------', new Date());
-    }
-  });
-  weights.end();
-};
-
-var writeToUserFile = (data) => {
-  stream.write(data, (err) => {
-    if (err) {
-      console.log(err.message);
-    } else {
-      console.log('END-----------------', new Date());
-    }
-  });
-  stream.end();
-};
+// var writeToUserFile = (data) => {
+//   stream.write(data, (err) => {
+//     if (err) {
+//       console.log(err.message);
+//     } else {
+//       console.log('END-----------------', new Date());
+//     }
+//   });
+//   stream.end();
+// };
 
 var generateUser = (num) => {
   console.log('START-----------------', new Date());
@@ -149,7 +149,6 @@ var simulateMatchData = () => {
 module.exports = {
   generateUser: generateUser,
   generateInitialWeights: generateInitialWeights,
-  // generateRandomWeights: generateRandomWeights,
   insertMatchEvents: insertMatchEvents,
   simulateMatchData: simulateMatchData
 };

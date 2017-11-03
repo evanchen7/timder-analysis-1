@@ -4,7 +4,7 @@
   "description": "Tinder Clone",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "nodemon server/index.js | nodemon awsqueue/messagePoll.js"
+    "start": "node server/index.js | node awsqueue/messagePoll.js"
   },
   "repository": {
     "type": "git",
