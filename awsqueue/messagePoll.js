@@ -20,7 +20,7 @@ const app = Consumer.create({
   },
   messageAttributeNames: ['Swipes'],
   batchSize: 5,
-  sqs: new AWS.SQS()
+  sqs: new AWS.SQS();
 });
 
 app.on('error', (err) => {
