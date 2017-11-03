@@ -54,7 +54,6 @@ var writeToWeightsFile = (data) => {
 };
 
 var writeToUserFile = (data) => {
-
   stream.write(data, (err) => {
     if (err) {
       console.log(err.message);
@@ -79,7 +78,6 @@ var generateUser = (num) => {
   }
 
  Promise.map(userPromises, (prom) => {
-   console.log(prom.userId)
     return models.Users.create(prom).catch((err) => {
       console.log(err);
     });
@@ -91,9 +89,7 @@ var generateUser = (num) => {
 };
 
 
-
 var generateInitialWeights = (num) => {
-  console.log('START-----------------', new Date());
   var currentTime = new Date();
   var raw = {
     '0': 0,
@@ -113,7 +109,10 @@ var generateInitialWeights = (num) => {
 
   var results = '';
   for (var i = 0; i < num; i++) {
-    results += i + '|' + i + '|' + JSON.stringify(raw) + '|' + JSON.stringify(count) + '|' + JSON.stringify(currentTime.toISOString()) + '|' + JSON.stringify(currentTime.toISOString()) + '\n';
+    results += i + '|' + i + '|' + JSON.stringify(raw) +
+    '|' + JSON.stringify(count) + '|' +
+    JSON.stringify(currentTime.toISOString()) +
+    '|' + JSON.stringify(currentTime.toISOString()) + '\n';
   }
 
  writeToWeightsFile(results);
@@ -145,7 +144,6 @@ var simulateMatchData = () => {
   insertMatchEvents();
   insertMatchEvents();
   insertMatchEvents();
-
 };
 
 module.exports = {

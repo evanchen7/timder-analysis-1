@@ -7,10 +7,6 @@ const pgAnalysis = require('../analysis/pgpromiseweight.js');
 
 // GET Routes
 
-routes.get('/getEventSwipes', (req, res, next) => {
-  //grab swipes from event service
-});
-
 // Find latest photo count weight associated with user
 routes.get('/api/weights/photo/', (req, res, next) => {
   if(req.query.id) {
@@ -56,8 +52,9 @@ routes.get('/api/weightshistory/all', (req, res, next) => {
   }
 });
 
+// POST Routes
 
-//POST Routes
+// GENERATE Fake Data
 routes.post('/createTables', (req, res) => {
   var weights = db.UserWeights.sync({force: true});
   var weightsHistory = db.UserWeightsHistory.sync({force: true});
@@ -66,7 +63,7 @@ routes.post('/createTables', (req, res) => {
   return Promise.all([weights, weightsHistory]).then((results) => {
     console.log('Tables Created', results);
   }).then(() => {
-    fakeData.generateInitialWeights(100000)
+    fakeData.generateInitialWeights(100000);
   })
   .catch((err) => {
     console.log(err);
@@ -75,23 +72,11 @@ routes.post('/createTables', (req, res) => {
 });
 
 routes.post('/addWeights', (req, res) => {
-
   db.UserWeights.sync({force: true});
   res.end();
 });
 
-// GENERATE Fake Data
 routes.post('/addUserData', (req, res) => {
-  //  db.Users.sync({force: true})
-  //   .then(() => {
-  //     fakeData.generateUser(1000000);
-  //     res.end();
-  //   })
-  //   .catch((err) => {
-  //     throw err;
-  //     res.end();
-  //   });
-
   // fakeData.generateUser(1000000);
   fakeData.generateInitialWeights(1000000);
   res.end();
@@ -121,7 +106,6 @@ routes.post('/nandapost', (req, res) => {
   }
 });
 
-// Generates fake POST requests
 routes.post('/start', (req, res) => {
   fakeData.simulateMatchData();
   res.end();

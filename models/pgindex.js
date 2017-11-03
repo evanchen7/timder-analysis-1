@@ -7,7 +7,6 @@ const pgp = require('pg-promise')({
 
 var cn = {
     host: '127.0.0.1', // server name or IP address;
-    // port: 5432,
     database: 'timderanalysis',
     user: 'evanchen',
     password: ''

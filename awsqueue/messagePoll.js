@@ -2,7 +2,7 @@
 const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');
 const config = require('../config/config.json');
-// const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+const analysis = require('../analysis/pgpromiseweight.js');
 
 AWS.config.update({
   region: config.region,
@@ -10,25 +10,29 @@ AWS.config.update({
   secretAccessKey: config.secretAccessKey
 });
 
+// app will handle incoming messages from SQS
 const app = Consumer.create({
-  queueUrl: config.queueUrl,
-  handleMessage: function(message, done){
-    if (message.MessageAttributes){
-      console.log(message)
-    }
-    done();
-  },
-  messageAttributeNames: ['Swipes'],
-  batchSize: 5,
-  sqs: new AWS.SQS();
+    queueUrl: config.queueUrl,
+    handleMessage: function(message, done){
+// Messages will be sent to elasticsearch and stored in database
+      if (message.MessageAttributes){
+        analysis.pgCalculateWeight(message.Body);
+      }
+      done();
+    },
+    messageAttributeNames: ['Swipes'],
+    batchSize: 10,
+    sqs: new AWS.SQS(),
 });
 
+
 app.on('error', (err) => {
-  console.log(message.err);
+  console.log(err.message);
 });
 
 app.on('empty', ()=> {
   console.log('Queue is empty');
-})
+});
 
+// app will automatically poll for messages in AWS SQS
 app.start();

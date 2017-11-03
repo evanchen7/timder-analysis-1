@@ -1,68 +1,43 @@
 'use strict';
 const AWS = require('aws-sdk');
-
 AWS.config.loadFromPath('../config/config.json');
+const config = require('../config/config.json');
 
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-var params = {
- DelaySeconds: 10,
- MessageAttributes: {
-  "Title": {
-    DataType: "String",
-    StringValue: "The Whistler"
-   },
-  "Author": {
-    DataType: "String",
-    StringValue: "John Grisham"
-   },
-  "WeeksOn": {
-    DataType: "Number",
-    StringValue: "6"
-   }
- },
- MessageBody: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
- QueueUrl: "https://sqs.us-west-1.amazonaws.com/224532707363/SQS_QUEUE_NAME"
-}
+var randomEvent = () => {
+  return {
+    'user_id': Math.floor(Math.random() * 10000),
+    'swiped_id': Math.floor(Math.random() * 10000),
+    swipe: [true, false][Math.floor(Math.random() * 2)],
+    timestamp: new Date().toISOString()
+  };
+};
+// 29579
+var par = () => {
+  return {
+    DelaySeconds: 0,
+    MessageAttributes: {
+      'Swipes': {
+        DataType: 'String',
+        StringValue: 'Swipe Events'
+      }
+    },
+    MessageBody: JSON.stringify(randomEvent()),
+    QueueUrl: config.queueUrl
+  };
+};
 
-var par = {
- DelaySeconds: 10,
- MessageAttributes: {
-  "Swipes": {
-    DataType: "String",
-    StringValue: "The Whistler"
-   }
- },
- MessageBody: "testSwipes.",
- QueueUrl: "https://sqs.us-west-1.amazonaws.com/224532707363/SQS_QUEUE_NAME"
-}
-
-var count = 300;
+var count = 100000;
 while (count > 0) {
   setTimeout( () => {
-    sqs.sendMessage(params, (err, data) => {
+    sqs.sendMessage(par(), (err, data) => {
       if (err) {
         console.log('Error', err);
       } else {
         console.log('Success', data);
-
       }
     });
-  }, 500)
-  count--
-}
-
-var count1 = 300;
-while (count1 > 0) {
-  setTimeout( () => {
-    sqs.sendMessage(par, (err, data) => {
-      if (err) {
-        console.log('Error', err);
-      } else {
-        console.log('Success', data);
-
-      }
-    });
-  }, 500)
-  count1--
+  }, 500);
+  count--;
 }
