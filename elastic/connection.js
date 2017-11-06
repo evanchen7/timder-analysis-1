@@ -1,8 +1,19 @@
 'use strict';
-var elasticsearch = require('elasticsearch');
+const elasticsearch = require('elasticsearch');
+
+// var esTransportOpts = {
+//   level: 'info',
+//   client:
+// };
+// winston.add(winston.transports.Elasticsearch, esTransportOpts);
+
 var client = new elasticsearch.Client({
-  host: 'https://search-timderanalysis2-a5c5f3p3qg5ukxfyxgyxyo2l3q.us-west-1.es.amazonaws.com',
-  log: 'trace'
+  host: '127.0.0.1:9200',
+  // log: {
+  //   type: 'file',
+  //   level: 'trace',
+  //   path: '/var/log/elasticsearch.log'
+  // }
 });
 
 client.ping({

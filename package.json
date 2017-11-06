@@ -4,7 +4,8 @@
   "description": "Tinder Clone",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "node server/index.js | node awsqueue/messagePoll.js"
+    "start": "node server/index.js | node awsqueue/messagePoll.js",
+    "server-test": "mocha -R nyan spec/serverTest.js"
   },
   "repository": {
     "type": "git",
@@ -22,13 +23,17 @@
     "axios": "^0.17.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
     "elasticsearch": "^13.3.1",
     "express": "^4.16.2",
+    "mocha": "^4.0.1",
     "path": "^0.12.7",
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2",
     "pg-promise": "^7.2.0",
     "sequelize": "^4.17.0",
-    "sqs-consumer": "^3.8.0"
+    "sqs-consumer": "^3.8.0",
+    "winston": "^2.4.0",
+    "winston-elasticsearch": "^0.5.3"
   }
 }

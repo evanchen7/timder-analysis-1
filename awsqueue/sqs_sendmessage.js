@@ -28,7 +28,7 @@ var par = () => {
   };
 };
 
-var count = 100;
+var count = 1000;
 while (count > 0) {
   setTimeout( () => {
     sqs.sendMessage(par(), (err, data) => {

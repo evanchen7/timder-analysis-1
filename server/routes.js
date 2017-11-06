@@ -8,6 +8,10 @@ const pgAnalysis = require('../analysis/pgpromiseweight.js');
 // GET Routes
 
 // Find latest photo count weight associated with user
+routes.get('/', (req,res, next) => {
+  res.json('Welcome to Timder Analysis, please refer to github documentation!');
+});
+
 routes.get('/api/weights/photo/', (req, res, next) => {
   if(req.query.id) {
     db.UserWeights.findOne({ where: {userId: req.query.id}, order: [['createdAt', 'DESC']] })

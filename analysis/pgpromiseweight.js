@@ -1,6 +1,6 @@
 'use strict';
 const db = require('../models/pgindex.js');
-const elasticAdd = require('../elastic/document_add.js');
+// const elasticAdd = require('../elastic/document_add.js');
 const pgp = db.$config.pgp;
 const weightsHistoryTable = new pgp.helpers.ColumnSet(['?user_id', 'raw_photo_count', 'photo_count_weight', 'created_at', 'updated_at'], {
   table: 'user_weights_history'
@@ -42,9 +42,7 @@ var pgCalculateWeight = (data) => {
           var updateUserWeightsHistory = pgp.helpers.insert([updatedData], weightsHistoryTable);
 
           t.batch([updateUserWeights, db.none(updateUserWeightsHistory)])
-            .then(() => {
-              elasticAdd.addDocuments(currentId, newRawPhotoCount, newPhoto);
-            });
+
         });
       })
       .catch(error => {

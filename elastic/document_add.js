@@ -1,6 +1,5 @@
 'use strict';
 var client = require('./connection.js');
-const axios = require('axios');
 
 module.exports.addDocuments = (userId, newRawPhotoCount, newPhoto) => {
   client.index({
