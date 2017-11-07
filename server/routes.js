@@ -4,55 +4,53 @@ const db = require('../models/index.js');
 const fakeData = require('../datageneration/usergenerator.js');
 const analysis = require('../analysis/weightcalculations.js');
 const pgAnalysis = require('../analysis/pgpromiseweight.js');
+const pgindex = require ('../models/pgindex.js');
 
 // GET Routes
-
-// Find latest photo count weight associated with user
 routes.get('/', (req,res, next) => {
   res.json('Welcome to Timder Analysis, please refer to github documentation!');
 });
 
-routes.get('/api/weights/photo/', (req, res, next) => {
-  if(req.query.id) {
-    db.UserWeights.findOne({ where: {userId: req.query.id}, order: [['createdAt', 'DESC']] })
+// Find latest photo count weight associated with user
+routes.get('/api/weights/photo/:userid', (req, res, next) => {
+  if(req.params.userid) {
+    pgindex.any('SELECT * FROM user_weights WHERE user_id = $1', [req.params.userid])
     .then((user) => {
       res.json(user);
     }).catch((err) => {
       console.log(err);
-      next();
     });
   } else {
-    res.sendStatus(204);
+    res.sendStatus(404);
   }
 });
 
+
 // Find all weights associated with user
-routes.get('/api/weights/all', (req, res, next) => {
-  if(req.query.id) {
-    db.UserWeights.findAll({ where: {userId: req.query.id}})
+routes.get('/api/weights/:userid/all', (req, res, next) => {
+  if(req.params.userid) {
+    pgindex.any('SELECT * FROM user_weights WHERE user_id = $1', [req.params.userid])
     .then((user) => {
       res.json(user);
     }).catch((err) => {
       console.log(err);
-      next();
     });
   } else {
-    res.sendStatus(204);
+    res.sendStatus(404);
   }
 });
 
 // Find weight history of specific user
-routes.get('/api/weightshistory/all', (req, res, next) => {
-  if(req.query.id) {
-    db.UserWeightsHistory.findAll({ where: {userId: req.query.id}})
+routes.get('/api/weightshistory/:userid/all', (req, res, next) => {
+  if(req.params.userid) {
+    pgindex.any('SELECT * FROM user_weights_history WHERE user_id = $1', [req.params.userid])
     .then((user) => {
       res.json(user);
     }).catch((err) => {
       console.log(err);
-      next();
     });
   } else {
-    res.sendStatus(204);
+    res.sendStatus(404);
   }
 });
 
@@ -62,7 +60,6 @@ routes.get('/api/weightshistory/all', (req, res, next) => {
 routes.post('/createTables', (req, res) => {
   var weights = db.UserWeights.sync({force: true});
   var weightsHistory = db.UserWeightsHistory.sync({force: true});
-
 
   return Promise.all([weights, weightsHistory]).then((results) => {
     console.log('Tables Created', results);

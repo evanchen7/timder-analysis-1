@@ -2,7 +2,13 @@
 const models = require('../models/index.js');
 const Promise = require('bluebird');
 const axios = require('axios');
-var fs = require('fs');
+const pgindex = require ('../models/pgindex.js');
+const pgp = pgindex.$config.pgp;
+const fs = require('fs');
+const userWeightsTable = new pgp.helpers.ColumnSet(['?user_id', 'raw_photo_count', 'photo_count_weight', 'created_at', 'updated_at'], {
+  table: 'user_weights'
+});
+
 // var stream = fs.createWriteStream("./datageneration/userFile.txt");
 // var weights = fs.createWriteStream("/Users/evanchen/desktop/weights.csv");
 
@@ -88,8 +94,35 @@ var generateUser = (num) => {
    });
 };
 
+var generateWeights = (num) => {
+  var raw = {
+    '0': 0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    'total': 0
+  };
+  var count = {
+    '0': 0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0
+  };
+  var testData = {
+    'user_id': num,
+    'raw_photo_count': raw,
+    'photo_count_weight': count,
+    'created_at': new Date().toISOString(),
+    'updated_at': new Date().toISOString()
+  };
 
-var generateInitialWeights = (num) => {
+  var insertUser = pgp.helpers.insert([testData], userWeightsTable);
+  return pgindex.none(insertUser);
+};
+
+var generateInitialWeightsString = (num) => {
   var currentTime = new Date();
   var raw = {
     '0': 0,
@@ -114,8 +147,7 @@ var generateInitialWeights = (num) => {
     JSON.stringify(currentTime.toISOString()) +
     '|' + JSON.stringify(currentTime.toISOString()) + '\n';
   }
-
- writeToWeightsFile(results);
+  return results;
 };
 
 var insertMatchEvents = () => {
@@ -148,7 +180,8 @@ var simulateMatchData = () => {
 
 module.exports = {
   generateUser: generateUser,
-  generateInitialWeights: generateInitialWeights,
+  generateInitialWeightsString: generateInitialWeightsString,
+  generateWeights: generateWeights,
   insertMatchEvents: insertMatchEvents,
   simulateMatchData: simulateMatchData
 };
