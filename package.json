@@ -5,7 +5,7 @@
   "main": ".eslintrc.js",
   "scripts": {
     "start": "node server/index.js | node awsqueue/messagePoll.js",
-    "server-test": "mocha spec/serverTest.js"
+    "server-test": "mocha -R nyan spec/serverTest.js"
   },
   "repository": {
     "type": "git",

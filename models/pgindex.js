@@ -5,8 +5,19 @@ const pgp = require('pg-promise')({
    promiseLib: promise
 });
 
+// Comment out for local development or AWS
+
+// var cn = {
+//     host: 'timderanalysistest.cr7kqfpfltan.us-west-1.rds.amazonaws.com',
+//     port: 5432,
+//     database: 'timderanalysistest',
+//     user: 'evanchen',
+//     password: 'Gvpix5597!'
+// };
+
 var cn = {
     host: '127.0.0.1', // server name or IP address;
+    port: 5432,
     database: 'timderanalysis',
     user: 'evanchen',
     password: ''

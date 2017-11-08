@@ -5,12 +5,14 @@ const config = require('../config/config.json');
 
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
+// {"user_id":7480221,"swiped_id":2195414,"swipe":1,"match":1,"timestamp":"2017-11-07"}
+
 var randomEvent = () => {
   return {
     'user_id': Math.floor(Math.random() * 10000),
     'swiped_id': Math.floor(Math.random() * 10000),
-    swipe: [true, false][Math.floor(Math.random() * 2)],
-    timestamp: new Date().toISOString()
+    swipe: [0, 1][Math.floor(Math.random() * 2)],
+    timestamp: new Date().toISOString().substring(0, 10)
   };
 };
 // 29579
@@ -28,7 +30,7 @@ var par = () => {
   };
 };
 
-var count = 1000;
+var count = 10000;
 while (count > 0) {
   setTimeout( () => {
     sqs.sendMessage(par(), (err, data) => {
