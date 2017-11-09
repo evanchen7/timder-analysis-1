@@ -5,6 +5,7 @@ config/staging.json
 config/test.json
 models/config.js
 config.json
+models/awsconfig.js
 
 # OS X
 .DS_Store

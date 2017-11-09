@@ -1,6 +1,5 @@
 'use strict';
 const db = require('../models/pgindex.js');
-// const elasticAdd = require('../elastic/document_add.js');
 const pgp = db.$config.pgp;
 const userUrl = 'http://Timder-LB-89480342.us-west-1.elb.amazonaws.com';
 const axios = require('axios');
@@ -26,7 +25,7 @@ var getInsertUserId = (id) => {
   const insertInitialWeights = pgp.helpers.insert([returnInitialData(id)], userWeightsTable);
 
   return db.task('getInsertUserId', t => {
-          return t.oneOrNone('SELECT * FROM user_weights WHERE user_id=$1', id) // u => u && u['user_id']
+          return t.oneOrNone('SELECT * FROM user_weights WHERE user_id=$1', id)
               .then(userId => {
                   return userId || t.one(insertInitialWeights + 'RETURNING *');
               });
@@ -79,7 +78,7 @@ var pgCalculateWeight = (data) => {
         var updateUserWeights = db.none('UPDATE user_weights SET raw_photo_count = $1, photo_count_weight = $2, updated_at = $3 WHERE user_id = $4', [newRawPhotoCount, newPhoto, updatedData['updated_at'], currentId]);
         var updateUserWeightsHistory = pgp.helpers.insert([updatedData], weightsHistoryTable);
 
-        t.batch([updateUserWeights, db.none(updateUserWeightsHistory)]);
+        t.batch([updateUserWeights, db.none(updateUserWeightsHistory)]).catch((err) => console.log(err));
 
         });
       })

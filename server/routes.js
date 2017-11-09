@@ -2,7 +2,6 @@
 const routes = require('express').Router();
 const db = require('../models/index.js');
 const fakeData = require('../datageneration/usergenerator.js');
-const analysis = require('../analysis/weightcalculations.js');
 const pgAnalysis = require('../analysis/pgpromiseweight.js');
 const pgindex = require ('../models/pgindex.js');
 
@@ -14,7 +13,7 @@ routes.get('/', (req,res, next) => {
 // Find latest photo count weight associated with user
 routes.get('/api/weights/photo/:userid', (req, res, next) => {
   if(req.params.userid) {
-    pgindex.any('SELECT * FROM user_weights WHERE user_id = $1', [req.params.userid])
+    pgAnalysis.getInsertUserId(req.params.userid)
     .then((user) => {
       res.json(user);
     }).catch((err) => {
@@ -25,11 +24,10 @@ routes.get('/api/weights/photo/:userid', (req, res, next) => {
   }
 });
 
-
 // Find all weights associated with user
 routes.get('/api/weights/:userid/all', (req, res, next) => {
   if(req.params.userid) {
-    pgindex.any('SELECT * FROM user_weights WHERE user_id = $1', [req.params.userid])
+    pgAnalysis.getInsertUserId(req.params.userid)
     .then((user) => {
       res.json(user);
     }).catch((err) => {
