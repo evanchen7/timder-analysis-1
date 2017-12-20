@@ -70,7 +70,13 @@ const UserWeights = db.define('userWeights', {
   },
   userId: {
     type: Sequelize.INTEGER,
-    field: 'user_id'
+    field: 'user_id',
+    unique: true,
+    allowNull: false
+  },
+  rawPhotoCount: {
+    type: Sequelize.JSON,
+    field: 'raw_photo_count'
   },
   photoCountWeight: {
     type: Sequelize.JSON,
@@ -82,6 +88,34 @@ const UserWeights = db.define('userWeights', {
   }
 }, {
   tableName: 'user_weights'
+});
+
+const UserWeightsHistory = db.define('userWeightsHistory', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    field: 'id',
+    autoIncrement: true
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    field: 'user_id',
+    allowNull: false
+  },
+  rawPhotoCount: {
+    type: Sequelize.JSON,
+    field: 'raw_photo_count'
+  },
+  photoCountWeight: {
+    type: Sequelize.JSON,
+    field: 'photo_count_weight'
+  },
+  createdAt: {
+    type: Sequelize.DATE,
+    field: 'created_at'
+  }
+}, {
+  tableName: 'user_weights_history'
 });
 
 //Relations between Users and UserWeights
@@ -97,5 +131,6 @@ module.exports = {
   db: db,
   Users: Users,
   userSwipes: userSwipes,
-  UserWeights: UserWeights
+  UserWeights: UserWeights,
+  UserWeightsHistory: UserWeightsHistory
 };

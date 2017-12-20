@@ -4,7 +4,8 @@
   "description": "Tinder Clone",
   "main": ".eslintrc.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/index.js | node awsqueue/messagePoll.js",
+    "server-test": "mocha -R nyan spec/serverTest.js"
   },
   "repository": {
     "type": "git",
@@ -17,14 +18,20 @@
   },
   "homepage": "https://github.com/evanchen7/hrsf81-thesis#readme",
   "dependencies": {
+    "async": "^2.5.0",
+    "aws-sdk": "^2.142.0",
     "axios": "^0.17.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
     "elasticsearch": "^13.3.1",
     "express": "^4.16.2",
-    "faker": "^4.1.0",
+    "mocha": "^4.0.1",
+    "path": "^0.12.7",
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.17.0"
+    "pg-promise": "^7.2.0",
+    "sequelize": "^4.17.0",
+    "sqs-consumer": "^3.8.0"
   }
 }

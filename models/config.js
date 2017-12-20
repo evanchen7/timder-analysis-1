@@ -6,7 +6,8 @@ module.exports = {
     dialect: 'postgres',
     user : 'evanchen',
     password : '',
-    database : 'timderanalysis'
+    database : 'timderanalysis',
+    logging: false
   },
   pool: {
     max: 5,

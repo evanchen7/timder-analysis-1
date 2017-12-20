@@ -3,6 +3,9 @@ config/development.json
 config/production.json
 config/staging.json
 config/test.json
+models/config.js
+config.json
+models/awsconfig.js
 
 # OS X
 .DS_Store
@@ -10,6 +13,10 @@ config/test.json
 # Logs
 logs
 *.log
+
+# Fake Data
+userFile.txt
+weights.txt
 
 # Runtime data
 pids
